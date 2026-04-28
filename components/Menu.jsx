@@ -1,39 +1,47 @@
-import { Image } from "react-native";
-import { View, Text, TouchableOpacity } from "react-native";
+import { Image, View, Text, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./MenuStyles.jsx";
 
 export function Menu(params) {
-    let visibility = (params.show) ? styles.show : styles.hidden;
-    let preText =
+    const preText =
         `This app contains:
 - Artist Info
 - Event Info
 - Set Lists
 - Song Lyrics
 `;
+    const Spacer = () => <View style={{ height: 20 }} />;
 
-    return (<View style={[styles.menumodal, styles.menu, visibility]} >
-        <button onClick={(event) => params.closeMenu(event)}>
-            <span><MaterialCommunityIcons name="close" size={24} color="black" /></span>
-        </button>
-        <View style={styles.menuHeader}>
-            <Text>
-                <h1>Event App</h1>
-            </Text>
-        </View>
-        <View style={styles.menuInfo}>
-            <div><pre className={'content'}>{preText}</pre></div>
-            <h3>Share this App</h3>
-            <Image
-                source={require("../assets/markpawl-events.vercel.app.QR-Code.png")}
-                style={{ width: 250, height: 250 }}
-            />
-            <br />
-            <h3>Contact</h3>
-            <span><a href={'http://markpawl.com'} target="_blank" rel="noreferrer" >http://markpawl.com</a></span>
-            <span><a href={`mailto://markpawl.music@gmail.com`} target="_blank" rel="noreferrer">markpawl.music@gmail.com</a></span>
-        </View>
-    </View>
+    return (
+        <Modal
+            transparent={false}
+            visible={params.show}
+            animationType="slide"
+            onRequestClose={params.closeMenu}
+        >
+            <View style={styles.menuFullScreen}>
+                <View style={styles.menuHeader}>
+                    <TouchableOpacity onPress={params.closeMenu} style={styles.closeButton}>
+                        <MaterialCommunityIcons name="close" size={24} color="black" />
+                    </TouchableOpacity>
+                    <Text style={styles.h1}>Event App</Text>
+                </View>
+                
+                <ScrollView style={styles.menuContent}>
+                    <Text style={styles.pre}>{preText}</Text>
+                    
+                    <Text style={styles.menuInfoH3}>Share this App</Text>
+                    <Image
+                        source={require("../assets/markpawl-events.vercel.app.QR-Code.png")}
+                        style={{ width: 250, height: 250 }}
+                    />
+                    <Spacer />
+                    
+                    <Text style={styles.h3}>Contact</Text>
+                    <Text style={styles.link}>http://markpawl.com</Text>
+                    <Text style={styles.link}>markpawl.music@gmail.com</Text>
+                </ScrollView>
+            </View>
+        </Modal>
     );
 }

@@ -5,40 +5,64 @@ export const styles = StyleSheet.create({
     display: 'none',
   },     
   h1: {
-    margin: 0,
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 10,
+    color: '#000000',
   },
+  h3: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 0,
+    marginBottom: 8,
+    marginTop: 10,
+    color: '#000000',
+  },  
   pre: {
+    fontFamily: 'monospace',
     marginTop: 0,
+    marginBottom: 10,
+    backgroundColor: '#f4f4f4',
+    padding: 10,
+    borderRadius: 4,
+    fontSize: 14,
   },
   show: {
     display: 'block',
   },   
   content: {
-    // 'line-height: normal' is default in RN; 
-    // 1.2em requires a fixed number based on your base font size (e.g., 18)
     lineHeight: 20, 
     fontFamily: 'sans-serif',
     fontSize: 18, 
   },
   menumodalImg: {
     width: 150,
-    // Note: React Native images often require a height to be visible
     height: 150, 
     resizeMode: 'contain',
   },
-  menumodal: {
+  menuFullScreen: {
+    backgroundColor: '#F5DEB3',
+    paddingTop: 10,
+    alignSelf: 'flex-start',
+  },
+  closeButton: {
     position: 'absolute',
-    width: 250,
-    left: 0,
-    top: 42,
-    backgroundColor: 'hsl(34, 85%, 92%,1)',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#D2691E', // Opaque chocolate
+    right: 15,
+    top: 15,
+    padding: 5,
+    zIndex: 10,
   },
   menuHeader: {
-    margin: 10,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D2691E',
+  },
+  menuContent: {
+    flex: 1,
+    padding: 15,
   },
   menuInfo: {
     flexDirection: 'column',
@@ -46,8 +70,11 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   menuInfoH3: {
+    fontSize: 18,
+    fontWeight: 'bold',
     margin: 0,
     marginBottom: 5,
+    marginTop: 15,
   },
   menuButton: {
     position: 'absolute',
@@ -55,5 +82,10 @@ export const styles = StyleSheet.create({
     margin: 8,
     marginTop: 7,
     height: 28,
+  },
+  link: {
+    fontSize: 16,
+    color: '#0066CC',
+    marginBottom: 5,
   },
 });
