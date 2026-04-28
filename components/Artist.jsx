@@ -1,17 +1,24 @@
 import {Image} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import "./Artist.css";
 
+const imageMap = {
+    "markpawl-01-300.jpg": require("../assets/markpawl-01-300.jpg"),
+};
+
 export function Artist(params) {
+    const filename = params.artist.image.split('/').pop();
+    const imageSource = imageMap[filename] || require("../assets/markpawl-01-300.jpg");
 
     return (<div className={'artist'} >
         <button onClick={(event) => params.closeModal(event)}>
             <span>
-                <i className="icon-x"></i>
+                <MaterialCommunityIcons name="close" size={24} color="black" />
             </span>
         </button>
         <header className={'artistHeader'}>
             <Image 
-                source={require("../assets/markpawl-01-300.jpg")} 
+                source={imageSource}
                 accessibilityLabel={params.artist.description}
                 style={{width: 300, height: 300}}
             />            

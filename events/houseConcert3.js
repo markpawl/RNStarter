@@ -7,7 +7,7 @@ let eventObject = {
         "name": "Poolstrasse 41",
         "description": "Our historic apartment in Neustadt.",
         "location": "Hamburg, Germany",
-        "image": "images/poolstrasse41-368.jpg",
+        "image": "../assets/poolstrasse41-368.jpg",
         "links": {
             "website": "https://markpawl.com/",
             "email": "markpawl.music@gmail.com"

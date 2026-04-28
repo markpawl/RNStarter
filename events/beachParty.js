@@ -7,7 +7,7 @@ let eventObject = {
         "name": "Altona TSV",
         "description": "Altonaer Turn- und Sportverein",
         "location": "Hamburg, Germany",
-        "image": "images/ATSV-image-300.jpg",
+        "image": "../assets/ATSV-image-300.jpg",
         "links": {
             "website": "https://atsv1899.de/",
             "phone": "040 - 439 50 93",

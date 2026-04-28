@@ -7,7 +7,7 @@ const eventObject = {
         "name": "Reepschlägerhaus",
         "description": "Historic location in the town of Wedel",
         "location": "Wedel, Germany",
-        "image": "images/reepschlagerhaus-01-300.jpg",
+        "image": "../assets/reepschlagerhaus-01-300.jpg",
         "links": {
             "website": "https://reepschlaegerhaus.de/",
             "email": "Info@reepschlaegerhaus.de"
@@ -17,7 +17,7 @@ const eventObject = {
         "name": "Mark Pawlowski",
         "description": "Singer songwriter from the USA, living in Hamburg Germany",
         "biography": markPawlowski,
-        "image": "images/markpawl-01-300.jpg",
+        "image": "../assets/markpawl-01-300.jpg",
         "links": {
             "website": "http://www.markpawl.com",
             "bandcamp": "https://markpaw.bandcamp.com/",

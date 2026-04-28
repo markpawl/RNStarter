@@ -14,7 +14,7 @@ let artist = {
     "name": "Mark Pawlowski",
     "description": "Singer Songwriter from the USA, living in Hamburg Germany",
     "biography": biography,
-    "image": "images/markpawl-01-300.jpg",
+    "image": "../assets/markpawl-01-300.jpg",
     "links": {
         "website": "http://www.markpawl.com",
         "bandcamp": "https://markpaw.bandcamp.com/",

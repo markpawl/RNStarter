@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 // import './App.css';
 import events from './events';
 import { SetList } from './components/SetList';
@@ -9,32 +11,127 @@ import { Menu } from './components/Menu';
 
 const event = events["houseConcert3"];
 
-const Modal = (params:any) => {
-    let modClasses = `${(params.show) ? 'show' : 'hide'} setlistmodal`;
+const styles = StyleSheet.create({
+
+    // ul — use a <View> instead of <ul> in RN
+    list: {
+        padding: 0,
+        margin: 5,
+        // list-style: none is irrelevant in RN, there are no list bullets
+    },
+
+    // button — apply to <TouchableOpacity> or <Button> wrapper View
+    button: {
+        borderRadius: 6,          // 20% of 30px height ≈ 6
+        borderColor: 'rgb(179, 137, 86)',
+        borderWidth: 1,           // borderColor alone does nothing, borderWidth is required
+        height: 30,
+    },
+
+    // hide/show — display:none/block has no direct RN equivalent
+    // in RN use conditional rendering instead:
+    // {isVisible && <View>...</View>}
+    // or conditionally apply: style={isHidden ? { display: 'none' } : {}}
+    hide: {
+        display: 'none',          // this does work in RN as a special case
+    },
+    // show has no RN equivalent — just omit the hide style to show
+    bolded: {
+        fontWeight: 'bold',
+    },
+
+    title: {
+        fontWeight: 'bold',
+        backgroundColor: '#FFE4C4FF', // Bisque with FF (opaque) alpha channel
+    },
+
+    artistTitle: {
+        fontWeight: 'bold',
+        fontSize: 20,        // 'larger' has no RN equivalent, pick a concrete size
+        marginLeft: 10,
+        color: 'white',
+        // width: 'auto' is the default in RN, so omit it
+    },
+
+    appHeader: {
+        backgroundColor: '#D2691E',
+        flexDirection: 'row', // flex is on by default, but RN defaults to 'column' so set 'row' if you want horizontal like a typical header
+        alignItems: 'center',
+        // justifyContent: 'normal' has no RN equivalent, omit it (defaults to 'flex-start')
+        padding: 5,
+    },
+
+    modalOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    setlistmodal: {
+        backgroundColor: '#FFFFFFFF', // White with FF (opaque) alpha channel
+        borderRadius: 8,
+        padding: 16,
+    },
+
+    venuemodal: {
+        backgroundColor: '#FFFFFFFF', // White with FF (opaque) alpha channel
+        borderRadius: 8,
+        padding: 16,
+    },
+
+    artistmodal: {
+        backgroundColor: '#FFFFFFFF', // White with FF (opaque) alpha channel
+        borderRadius: 8,
+        padding: 16,
+    },
+
+    hidden: {
+        display: 'none',
+    },
+
+    bordered: {
+        borderWidth: 2,
+        borderColor: '#D2691E',
+        borderRadius: 4,
+        padding: 10,
+    },
+
+});
+
+const ModalWrapper = (params: any) => {
     return (
-        <div className={modClasses}
-         >
-            {params.children}
-        </div>
+        <Modal
+            transparent={true}
+            visible={params.show}
+            animationType="fade"
+        >
+            <View style={[styles.modalOverlay, styles.setlistmodal, params.show ? {} : styles.hidden]}>
+                {params.children}
+            </View>
+        </Modal>
     );
 };
 
-const VenueModal = (params:any) => {
+const VenueModal = (params: any) => {
     let modClasses = `venuemodal ${(params.show) ? 'show' : 'hide'}`;
     return (
-        <div className={modClasses} >
+        <View style={[styles.modalOverlay, styles.venuemodal, params.show ? {} : styles.hidden]}>
             {params.children}
-        </div>
+        </View>
     );
 };
 
-const ArtistModal = (params:any) => {
+const ArtistModal = (params: any) => {
     let modClasses = `artistmodal ${(params.show) ? 'show' : 'hide'}`;
     return (
-        <div className={modClasses} >
+        <View style={[styles.modalOverlay, styles.artistmodal, params.show ? {} : styles.hidden]}>
             {params.children}
-        </div>
-    );
+        </View> )
 };
 
 const App = () => {
@@ -46,10 +143,10 @@ const App = () => {
     let defaultLocater = { event: event, setNumber: 0, songNumber: 0 };
 
     // retrieve locally persisted settings
-    let storedSetAndSongString = localStorage.getItem(storageKey); 
-    if(storedSetAndSongString){
+    let storedSetAndSongString = localStorage.getItem(storageKey);
+    if (storedSetAndSongString) {
         let storedSetAndSong = JSON.parse(storedSetAndSongString);
-        defaultLocater = {event: event, ...storedSetAndSong }
+        defaultLocater = { event: event, ...storedSetAndSong }
     }
 
     const [locater, setLocater] = useState(defaultLocater);
@@ -61,7 +158,7 @@ const App = () => {
     }, [locater]);
 
 
-    function getCurrent(locater:any) {
+    function getCurrent(locater: any) {
         let event = locater.event;
         let currentSet = event.sets[locater.setNumber];
         let currentSong = currentSet.songs[locater.songNumber];
@@ -69,20 +166,20 @@ const App = () => {
         return { "event": locater.event, "songSet": currentSet, "song": currentSong, "position": position };
     }
 
-    function getIsFirst(){
-        if(locater.setNumber === 0 && locater.songNumber === 0){
+    function getIsFirst() {
+        if (locater.setNumber === 0 && locater.songNumber === 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    function getIsLast(){
+    function getIsLast() {
         let lastSetIdx = event.sets.length - 1;
-        let lastSongIdx = event.sets[lastSetIdx].songs.length -1;
-        if(locater.setNumber === lastSetIdx && locater.songNumber === lastSongIdx){
+        let lastSongIdx = event.sets[lastSetIdx].songs.length - 1;
+        if (locater.setNumber === lastSetIdx && locater.songNumber === lastSongIdx) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -125,10 +222,10 @@ const App = () => {
         }
     }
 
-    const toggleMenu = (event:any) => { 
-        if(showMenu){
+    const toggleMenu = (event: any) => {
+        if (showMenu) {
             setShowMenu(false);
-        }else{
+        } else {
             setShowArtist(false);
             setShowVenue(false);
             setShowSidebar(false);
@@ -137,10 +234,10 @@ const App = () => {
         event.stopPropagation();
     }
 
-    const toggleSidebar = (event:any) => { 
-        if(showSidebar){
+    const toggleSidebar = (event: any) => {
+        if (showSidebar) {
             setShowSidebar(false);
-        }else{
+        } else {
             setShowArtist(false);
             setShowVenue(false);
             setShowSidebar(true);
@@ -149,91 +246,93 @@ const App = () => {
         event.stopPropagation();
     }
 
-    const toggleArtistModal = (event:any) => { 
-        if(showArtist){
+    const toggleArtistModal = (event: any) => {
+        if (showArtist) {
             setShowArtist(false);
-        }else{
+        } else {
             setShowArtist(true);
             setShowVenue(false);
             setShowSidebar(false);
             setShowMenu(false);
         }
-        event.stopPropagation();         
-    }    
+        event.stopPropagation();
+    }
 
-    const toggleVenueModal = (event:any) => { 
-        if(showVenue){
+    const toggleVenueModal = (event: any) => {
+        if (showVenue) {
             setShowVenue(false);
-        }else{
+        } else {
             setShowArtist(false);
             setShowVenue(true);
             setShowSidebar(false);
             setShowMenu(false);
         }
-        event.stopPropagation();        
-    } 
+        event.stopPropagation();
+    }
 
 
     return (
-        <div><header 
-                className={"appHeader"}
-                onClick={(event) => toggleArtistModal(event)}
-            >
-            <div>
-                <button onClick={(event) => toggleMenu(event)}>
-                    <span><i className="icon-list"></i></span>
-                </button>
-            </div>
-            <div  className={'artistTitle'}>Artist: {event.artist.name}</div>
-        </header>
-            <Menu 
-              show={showMenu} 
-              closeMenu={toggleMenu}
+        <View style={{ flex: 1 }}>
+            <View style={styles.appHeader} >
+                <TouchableOpacity onPress={(event) => toggleMenu(event)} >
+                    <View>
+                        <MaterialCommunityIcons name="menu" size={24} color="black" />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={(event) => toggleArtistModal(event)} >
+                    <Text style={styles.artistTitle}>
+                        Artist: {event.artist.name}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+            <Menu
+                show={showMenu}
+                closeMenu={toggleMenu}
             />
-            <Modal
+            <ModalWrapper
                 show={showSidebar}
-                >
-                <div className={'bordered'}>
+            >
+                <View style={styles.bordered}>
                     <SetList
                         setLocater={setLocater}
                         locater={locater}
                         closeModal={toggleSidebar}
                     />
-                </div>
-            </Modal>
+                </View>
+            </ModalWrapper>
             <ArtistModal
                 show={showArtist}
-                >
-                <div className={'bordered'}>
+            >
+                <View style={styles.bordered}>
                     <Artist
                         closeModal={toggleArtistModal}
                         artist={event.artist}
                     />
-                </div>
-            </ArtistModal> 
+                </View>
+            </ArtistModal>
             <VenueModal
                 show={showVenue}
-                >
-                <div className={'bordered'}>
+            >
+                <View style={styles.bordered}>
                     <Venue
                         closeModal={toggleVenueModal}
                         venue={event.venue}
                     />
-                </div>
-            </VenueModal>                       
+                </View>
+            </VenueModal>
             <PageContent
                 showSidebar={showSidebar}
                 showVenue={showVenue}
                 onNext={onNext}
-                isFirst = {isFirst}
-                isLast = {isLast}
+                isFirst={isFirst}
+                isLast={isLast}
                 onPrevious={onPrevious}
                 toggleSidebar={toggleSidebar}
                 toggleVenueModal={toggleVenueModal}
                 current={getCurrent(locater)}
                 event={event}
             />
-        </div>
+        </View>
     );
 };
 

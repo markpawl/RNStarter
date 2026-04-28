@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import './PageContent.css';
+import { styles } from "./PageContentStyles"
+import { View, Text, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const PageContent = (params) => {
     let [language, setLanguage] = useState("en");
@@ -19,10 +21,10 @@ export const PageContent = (params) => {
         event.stopPropagation();
     }
 
-    function getArtist(){
-        if(params.current.song.artist){
+    function getArtist() {
+        if (params.current.song.artist) {
             return params.current.song.artist;
-        }else{
+        } else {
             return params.current.event.artist.name;
         }
     }
@@ -36,70 +38,73 @@ export const PageContent = (params) => {
         }
     }
 
-    function getCaretClasses(showVariable){
-        if(showVariable){
-            // return "caretIcon bi bi-caret-down-fill";
-            return "icon-caret-down-fill";
-        }else{
-            // return "caretIcon bi bi-caret-right-fill";
-            return "icon-caret-right-fill";
+    function getCaretIcon(showVariable) {
+        if (showVariable) {
+            return "chevron-down";
+        } else {
+            return "chevron-right";
         }
     }
 
     return <>
-        <div   >
-            <div className={'eventHeader'}
-                onClick={params.toggleVenueModal}
-            >
-                <span onClick={params.toggleVenueModal}>
-                    <i className={getCaretClasses(params.showVenue)} ></i>
-                </span>                
-                <span >
+
+        <View  name={"pageContent"} style={styles.pageContent} >
+            <Text  style={styles.eventHeader} onTouch={params.toggleVenueModal} >
+                <Text onClick={params.toggleVenueModal}>
+                    <MaterialCommunityIcons name={getCaretIcon(params.showVenue)} size={20} color="black" />
+                </Text>
+                <Text >
                     &nbsp;{params.current.event.title} @ {params.event.venue.name}
-                </span>
-            </div>
+                </Text>
+            </Text>
+            {/* Song Header */}
+            <View style={[styles.container, styles.songHeader]} >
 
-            <div className={'songHeader'}  >
-                <span onClick={params.toggleSidebar}>
-                    <i className={getCaretClasses(params.showSidebar)} ></i>
-                </span>
-                <span className={"songTitle"} onClick={params.toggleSidebar} >
+                <View style={styles.leftGroup}>
+                    <Text>
+                    <Text onClick={params.toggleSidebar}>                       
+                        <MaterialCommunityIcons name={getCaretIcon(params.showSidebar)} size={20} color="black" />
+                    </Text>                  
+                    <Text className={"songTitle"} onClick={params.toggleSidebar} >
+                        &nbsp;
+                        <Text style={{ fontSize: "medium", fontWeight: "normal" }}>{params.current.song.title} </Text>
+                        &nbsp;
+                    </Text>
+                    <Text style={{ fontSize: "small", paddingTop: "4px" }}>({params.current.position})&nbsp;</Text>
+                    <button
+                        onClick={(event) => onClickPrevious(event)}
+                        style={(params.isFirst) ? { backgroundColor: "lightgrey" } : {}}
+                    >
+                        <Text><MaterialCommunityIcons name="chevron-left" size={20} color="black" /></Text>
+                    </button>
                     &nbsp;
-                    <span style={{ fontSize: "medium", fontWeight: "normal" }}>{params.current.song.title} </span>
-                    &nbsp;
-                </span>
-                <span style={{ fontSize: "small", paddingTop: "4px" }}>({params.current.position })&nbsp;</span>
-                <button
-                    onClick={(event) => onClickPrevious(event)}
-                    style={(params.isFirst) ? { backgroundColor: "lightgrey" } : {}}
-                >
-                    <span><i
-                        className="icon-caret-left" // -fill
-                    ></i></span>
-                </button>
-                &nbsp;
-                <button
-                    onClick={(event) => onClickNext(event)}
-                    style={(params.isLast) ? { backgroundColor: "lightgrey" } : {}}
-                >
-                    <span><i
-                        className="icon-caret-right" //-fill
-                    ></i></span>
-                </button>
-                &nbsp;
-                <span
-                    className={(language === "en" ? "borderBlack" : "borderWhite")}
-                    onClick={(event) => onLanguageButtonPress(event, "en")}
-                ><i className="icon-usaFlag" ></i></span>
-                <span
-                    className={(language === "de" ? "borderBlack" : "borderWhite")}
-                    alt="germany flag"
-                    onClick={(event) => onLanguageButtonPress(event, "de")}
-                ><i className="icon-germanyFlag" ></i></span>
-            </div>
-        </div>
-
-        <pre className={'preContent'}>{getLyrics() + " (c) " + getArtist()}</pre>
-        <div className={'pageEnd'}></div>
+                    <button
+                        onClick={(event) => onClickNext(event)}
+                        style={(params.isLast) ? { backgroundColor: "lightgrey" } : {}}
+                    >
+                        <Text><MaterialCommunityIcons name="chevron-right" size={20} color="black" /></Text>
+                    </button>
+                    </Text>
+                </View>
+                <View style={styles.rightGroup}>
+                    <View style={{ flex: 1, flexDirection: 'row' }} >
+                        <TouchableOpacity onPress={(event) => onLanguageButtonPress(event, "en")} >
+                            <Text
+                                style={language === 'en' ? styles.borderBlack : styles.borderWhite}
+                                alt="american flag"
+                            >🇺🇸</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={(event) => onLanguageButtonPress(event, "de")} >
+                            <Text
+                                style={language === 'de' ? styles.borderBlack : styles.borderWhite}
+                                alt="germany flag"
+                            >🇩🇪</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+            <pre className={'preContent'}>{getLyrics() + " (c) " + getArtist()}</pre>
+            <View style={styles.pageEnd}></View>
+        </View>
     </>
 }

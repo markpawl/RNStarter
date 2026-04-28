@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import './SetList.css';
 
 export const SetList = (params) => {
@@ -24,13 +25,11 @@ export const SetList = (params) => {
         params.closeModal(event);
     }
 
-    function getCaretClasses(showVariable){
+    function getCaretIcon(showVariable){
         if(showVariable){
-            // return "caretIcon bi bi-caret-down-fill";
-            return "icon-caret-down-fill";
+            return "chevron-down";
         }else{
-            // return "caretIcon bi bi-caret-right-fill";
-            return "icon-caret-right-fill";
+            return "chevron-right";
         }
     }
 
@@ -42,7 +41,7 @@ export const SetList = (params) => {
                     onClick={() => onSetClick(params.setIndex)}
                 >
                     <span>
-                        <i className={getCaretClasses((selectedSet === params.setIndex))} ></i>
+                        <MaterialCommunityIcons name={getCaretIcon((selectedSet === params.setIndex))} size={20} color="black" />
                     </span>
                     &nbsp;
                     {params.set.name} {params.set.time}
